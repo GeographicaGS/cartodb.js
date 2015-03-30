@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>cartodb demo template</title>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.12/themes/css/cartodb.css" />
+
+  </head>
+
+  <body>
+    <div id='map_canvas' style='width: 1024px;height:500px'></div>
+  </body>
+
+  <script src="../src/cartodb.js"></script>
+
+  <script>
+
+    function startApp(){
+        var map = new L.Map('map_canvas', { 
+          center: [19.30,-99.15],
+          zoom: 10
+        });
+
+        cartodb.createLayer(map, 'https://finanzasdf.cartodb.com/api/v2/viz/bc5fbda0-d2db-11e4-8e5c-0e0c41326911/viz.json',{legends: false})
+          .addTo(map)
+          .on('done', function(layer) {
+              //do stuff
+              var viewlegend = new cdb.geo.ui.StackedLegend({
+                legends: map.viz._createLayerLegendView(layer.model.attributes,  layer)
+              }).render();
+              console.log(viewlegend.$el);
+
+          })
+          .on('error', function(err) {
+            alert("some error occurred: " + err);
+          });
+    }
+
+    window.onload = function() {
+      cdb.load('../src/', function() {
+        console.log("CARTODB LOADED");
+          startApp();
+      });
+    };
+  </script>
+  
+</html>
